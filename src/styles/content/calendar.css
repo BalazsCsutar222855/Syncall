@@ -1,0 +1,97 @@
+/* src/components/Sidebar.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.container
+{
+    max-width: 100%;
+}
+
+.rbc-toolbar
+{
+    @apply p-4 m-0 border-b-2 border-gray-100 dark:bg-gray-700;
+}
+
+.rbc-event
+{
+    @apply font-semibold text-xs m-1 mt-0 box-border;
+}
+
+.rbc-button-link
+{
+    @apply text-xs font-normal;
+}
+
+
+.rbc-row-segment
+{
+    display:flex
+}
+
+.rbc-month-view
+{
+    border: 0px;
+    @apply dark:bg-gray-700;
+}
+
+.rbc-month-row + .rbc-month-row, .rbc-day-bg + .rbc-day-bg
+{
+    @apply border-gray-200 
+}
+
+.rbc-toolbar button
+{
+    margin-right: 5px;
+    @apply bg-transparent border-0 font-semibold text-gray-500 hover:bg-gray-100 hover:text-indigo-700 duration-100
+}
+
+.rbc-toolbar button:active, .rbc-toolbar button.rbc-active
+{
+    @apply bg-gray-100 shadow-none text-gray-500
+}
+
+.rbc-btn-group > button:last-child:not(:first-child), .rbc-btn-group > button:first-child:not(:last-child), .rbc-btn-group > button:not(:first-child):not(:last-child)
+{
+    @apply rounded-lg
+}
+
+.rbc-toolbar-label
+{
+    @apply mx-4 text-lg font-bold
+}
+
+.rbc-off-range-bg
+{
+    @apply bg-gray-100 dark:bg-gray-800
+}
+
+.rbc-date-cell
+{
+    @apply text-left pl-2
+}
+
+.rbc-label
+{
+    @apply text-gray-500 text-sm
+}
+
+.rbc-day-slot .rbc-event, .rbc-day-slot .rbc-background-event
+{ 
+    @apply bg-sky-100 text-sky-600 border-sky-300 box-border p-1 
+}
+
+.rbc-event.rbc-selected, .rbc-day-slot .rbc-selected.rbc-background-event
+{
+    @apply bg-sky-200 text-sky-600 border-sky-500 box-border p-1 outline-none
+}
+
+.rbc-timeslot-group
+{
+    @apply border-b-2 border-gray-100
+}
+
+.rbc-header
+{
+    @apply font-semibold text-gray-700
+}

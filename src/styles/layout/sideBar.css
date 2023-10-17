@@ -1,0 +1,15 @@
+/* src/components/Sidebar.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Add your custom styles here */
+/* For example, you can define styles for the sidebar and its elements */
+.sideBar {
+  width: 15rem; /* Adjust the width as needed */
+  color: white;
+}
+
+/* Define styles for buttons, headings, etc. */
+/* ... */
