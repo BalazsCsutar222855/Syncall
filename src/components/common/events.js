@@ -45,30 +45,25 @@ export const Favourite = () => {
     )
 }
 
-export const Branches = ({ icon: IconComponent, title, desc, branch, setBranch, id, setLoading}) => {
+export const Branches = ({ icon: IconComponent, title, desc, branch, setBranch, id, setLoading, branchTree, setBranchTree}) => {
     return (
-        <a className="p-5 bg-gray-100 h-36 w-full rounded-md overflow-auto cursor-pointer" href={branch.Chapter ? `/books/preview?id=${id}` : undefined}
+        <a className="p-5 bg-gray-100 h-36 w-full rounded-md overflow-auto cursor-pointer" href={branchTree.Chapter ? `/books/preview?id=${id}` : undefined}
             onClick={() => {
-                setLoading(true); 
-                setBranch(prevBranch => {
-                    // Clone the previous state
-                    const updatedBranch = { ...prevBranch };
-                  
-                    if (!updatedBranch.Shelf) {
-                      updatedBranch.Shelf = title;
-                    } else if (!updatedBranch.Book) {
-                      updatedBranch.Book = title;
-                    } else if (!updatedBranch.Chapter) {
-                      updatedBranch.Chapter = title;
-                    } else if (!updatedBranch.Page) {
-                      updatedBranch.Page = title;
-                    }
-                  
-                    return updatedBranch;
-                  });
-                  
-                  
-                  
+
+                if (!branchTree.Shelf) {
+                    branchTree.Shelf = {title, id};
+                }
+                else if (!branchTree.Book ) {
+                    branchTree.Book = {title, id};
+                }
+                else if (!branchTree.Chapter) {
+                    branchTree.Chapter = {title, id};
+                }
+
+
+                setBranchTree({ ...branchTree });
+
+
             }}
         >
             <div className={`p-2 ${branch.Shelf ? "bg-red-600 ": branch.Books ? "bg-purple-600" : branch.Chapter ? "bg-green-600" : null } text-white mr-5 rounded-md w-12 h-12 flex justify-center items-center`}>
