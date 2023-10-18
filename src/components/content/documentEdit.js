@@ -63,7 +63,7 @@ const DocumentView = () => {
 
             <div className="flex w-full"> 
 
-            <div className="w-full bg-white h-full shadow-xl border-2 border-gray-100 p-5" id="paper">
+            <div className="w-[300px] bg-white h-full shadow-xl border-2 border-gray-100 p-5" id="paper">
             <MDEditor
                 preview={mode ? "live" : "preview"}
                 hideToolbar={!mode}

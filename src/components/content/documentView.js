@@ -1,16 +1,53 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MDEditor from '@uiw/react-md-editor';
 import { getCodeString } from 'rehype-rewrite';
 import katex from 'katex';
 import "katex/dist/katex.css";
+import {FolderArrowDownIcon, XMarkIcon} from "@heroicons/react/24/solid";
+import axios from "axios";
+import { getTokenFromCookie } from '../common/setCookies'
 
 const DocumentView = () => {
 
     const [mode, setMode] = useState(false);
-    const [value, setValue] = useState();
+    const [description, setDescription] = useState();
+    const token = getTokenFromCookie()
+    const id = new URL(window.location.href).searchParams.get("id");
 
     const handleNoteChange = (val) => {
-        setValue(val)
+        setDescription(val)
+    }
+
+    useEffect(() => {
+        axios.get('https://syncall.balage.top/editor/page/f306b4ab-1e52-46f8-bb07-aeb401774b27', {
+            headers: {
+                Authorization: `Token ${token}`,
+            }
+        })
+            .then(response => {
+                // Set the response data directly in the state
+                setDescription(response.data.description);
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }, []);
+
+    //The update is not working beacause it wants a object instead of the description, even tought the api is able to accept partial, therefore i have to list the fetching into an ojbject and then alter this object during the editing
+    const handleSave = () => {
+        axios
+            .put(`https://syncall.balage.top/editor/page/update/f306b4ab-1e52-46f8-bb07-aeb401774b27/`, description, {
+                headers: {
+                    Authorization: `Token ${token}`,
+                }})
+            .then((response) => {
+                // Handle the API response if needed
+                console.log('Event updated successfully:', response.data);
+            })
+            .catch((error) => {
+                console.log('Error updating event:', error);
+            });
     }
     
 
@@ -26,7 +63,7 @@ const DocumentView = () => {
                 height={700}
                 highlightEnable={true}
                 visibleDragbar={false}
-                value={value}
+                value={description}
                 style={{border: '0px'}}
                 onChange={(val) => handleNoteChange(val)}
                 previewOptions={{
@@ -70,37 +107,49 @@ const DocumentView = () => {
                     </span>
     
                 </div>
-                <a class="hover:text-indigo-700 hover:bg-gray-100 flex items-center p-2 my-3 transition-colors dark:hover:text-white dark:hover:bg-gray-600 duration-200  text-gray-500 dark:text-gray-200 rounded-lg  " href="#"
-                    onClick={() => setMode(!mode)}>
+                {
+                    mode ?
+                        <div className="flex flex-col">
+                            <a className="hover:bg-orange-500 bg-orange-400 flex items-center px-2 py-4 my-2 transition-colors dark:hover:text-white dark:hover:bg-gray-600 duration-200  text-white dark:text-gray-200 rounded-lg  " href="#"
+                               onClick={() => handleSave()}>
 
-                    {
-                        mode ? 
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
+                                <FolderArrowDownIcon className="h-5 w-5"></FolderArrowDownIcon>
+                                <span className="mx-4 text-sm font-bold">
+                                Save
+                            </span>
+                            </a>
+                            <a className="hover:bg-red-500 bg-red-400 flex items-center p-2  transition-colors dark:hover:text-white dark:hover:bg-gray-600 duration-200  text-white dark:text-gray-200 rounded-lg  " href="#"
+                               onClick={() => setMode(!mode)}>
+
+                                <XMarkIcon className="h-5 w-5"></XMarkIcon>
+                                <span className="mx-4 text-sm font-bold">
+                                Cancel
+                            </span>
+                            </a>
+
+                        </div>
                         :
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
-                        </svg>    
-                        
+                        <a className="hover:text-indigo-700 hover:bg-gray-100 flex items-center p-2 my-3 transition-colors dark:hover:text-white dark:hover:bg-gray-600 duration-200  text-gray-500 dark:text-gray-200 rounded-lg  " href="#"
+                           onClick={() => setMode(!mode)}>
 
-                    }
 
-    
-                    <span class="mx-4 text-sm font-bold">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" className="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                            </svg>
 
-                        {mode ? "Preview" : "Edit"}
+
+
+                            <span className="mx-4 text-sm font-bold">
+                        Edit
                     </span>
-                    <span class="flex-grow text-right">
-                    </span>
-                </a>
+                        </a>
+                }
                 <a class="hover:text-indigo-700 hover:bg-gray-100 flex items-center p-2 my-3 transition-colors dark:hover:text-white dark:hover:bg-gray-600 duration-200  text-gray-500 dark:text-gray-200 rounded-lg  " href="#"
                     >
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 13.5H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
                     </svg>
-    
+
     
                     <span class="mx-4 text-sm font-bold">
                         Move

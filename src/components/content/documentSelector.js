@@ -99,7 +99,7 @@ const DocumentSelector = ({branch, setBranch, setView}) => {
 
         }
         else if(!branch.Page){
-            axios.get('https://syncall.balage.top/editor/page', {
+            axios.get('https://syncall.balage.top/editor/pages', {
                 headers: {
                   Authorization: `Token ${token}`,
                 }
