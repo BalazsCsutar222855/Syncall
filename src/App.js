@@ -42,9 +42,7 @@ function App() {
           setTokenValid(false); // Set token validity to false
         })
         .finally(() => {
-          setTimeout(() => {
             setIsLoading(false);
-          }, 200);
         });
     } else {
       // No token found
@@ -66,7 +64,7 @@ function App() {
         <Routes>
           <Route
             path="/*"
-            element={isLoading ? (<Loader></Loader>) : tokenValid ? (<LayoutWorkbench toggleDarkMode={toggleDarkMode} />) : (<SignPage />)}
+            element={isLoading ? (<Loader/>) : tokenValid ? (<LayoutWorkbench toggleDarkMode={toggleDarkMode} />) : (<SignPage />)}
           />
           
         </Routes>

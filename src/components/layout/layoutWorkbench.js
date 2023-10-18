@@ -27,9 +27,8 @@ const LayoutWorkbench = ({ toggleDarkMode }) => {
 
   return (
     <div className="layoutWorkbench overflow-hidden" style={{"height":"100vh"}}>
-      <Sidebar changeView={changeView} toggleDarkMode={toggleDarkMode} />
+      <Sidebar changeView={changeView} toggleDarkMode={toggleDarkMode} myEvents={myEvents} setDate={setDate} />
       <div className="Content bg-gray-100">
-        <Header myEvents={myEvents} setDate={setDate} className='fixed' />
         <div className="container overflow-auto">
         <Routes>
           <Route path="/" element={<Home />} />

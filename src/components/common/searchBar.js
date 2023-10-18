@@ -77,12 +77,12 @@ function SearchBar({myEvents, setDate}) {
   }, [isFocused]);
 
   return (
-    <div className="w-96 h-full bg-white relative" onFocus={() => setIsFocused(true)} ref={dropdownRef}> 
+    <div className="w-full h-full bg-white relative" onFocus={() => setIsFocused(true)} ref={dropdownRef}>
       <div className="relative flex items-center w-full h-full lg:w-full group focus:drop-shadow duration-100">
         <div className="absolute z-50 flex items-center justify-center block w-auto h-10 p-3 pr-2 text-sm text-gray-500 uppercase cursor-pointer sm:hidden">
           <svg
             fill="none"
-            className="relative w-5 h-5"
+            className="relative w-4 h-4"
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"

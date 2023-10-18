@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Branches } from "../common/events";
 import PopupElement from '../common/popUpElement'
-import {TrashIcon} from "@heroicons/react/24/solid";
+import {TrashIcon, ArrowSmallLeftIcon} from "@heroicons/react/24/solid";
 import axios from 'axios'; // Import Axios if you're using it
 import { getTokenFromCookie } from '../common/setCookies'
+
 
 const DocumentSelector = ({branch, setBranch, setView}) => {
 
@@ -131,7 +132,11 @@ const DocumentSelector = ({branch, setBranch, setView}) => {
 
     return(
         <div>
-            <div className="w-full h-full flex items-center p-3 gap-6 text-gray-300 cursor-pointer"> 
+            <div className="w-full h-full flex items-center mb-5 gap-6 text-gray-300 cursor-pointer">
+                <ArrowSmallLeftIcon className="h-5 w-5 text-gray-600" onClick={() => {
+                    setView('Manager'); setBranch('')
+                }}></ArrowSmallLeftIcon>
+
                 <div className="flex gap-2 text-gray-400 items-center" onClick={() => {setLoading(true); setBranch('')} }>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
                     <path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" />

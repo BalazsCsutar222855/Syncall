@@ -10,7 +10,7 @@ const Editor = ({changeView}) => {
     const [page, setPage] = useState("Manager")
 
     return (
-        <div className="p-2 w-full h-full" data-color-mode="{light}">
+        <div className="w-full h-full" data-color-mode="{light}">
             <div>
             <Routes>
                 <Route path="/" element={<DocumentManager />} />

@@ -236,7 +236,7 @@ const CalendarElement = ({setEvents, myEvents, date, setDate}) => {
       useEffect(() => {
         // Function to update the window height and set it in state
         const updateWindowHeight = () => {
-          setWindowHeight(window.innerHeight - 65);
+          setWindowHeight(window.innerHeight);
         };
     
         // Add an event listener for the "resize" event to update the window height when the window is resized

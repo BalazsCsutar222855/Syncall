@@ -47,7 +47,7 @@ export const Favourite = () => {
 
 export const Branches = ({ icon: IconComponent, title, desc, branch, setBranch, id, setLoading}) => {
     return (
-        <a className="p-5 bg-white h-36 w-full rounded-md overflow-auto cursor-pointer" href={branch.Chapter ? `/books/preview?id=${id}` : undefined}
+        <a className="p-5 bg-gray-100 h-36 w-full rounded-md overflow-auto cursor-pointer" href={branch.Chapter ? `/books/preview?id=${id}` : undefined}
             onClick={() => {
                 setLoading(true); 
                 setBranch(prevBranch => {
@@ -71,7 +71,7 @@ export const Branches = ({ icon: IconComponent, title, desc, branch, setBranch, 
                   
             }}
         >
-            <div className={`p-2 ${branch == "Shelfs" ? "bg-red-600 ": branch == "Books" ? "bg-purple-600" : branch == "Chapters" ? "bg-green-600" : branch == "Pages" ? "bg-blue-600" : null } text-white mr-5 rounded-md w-12 h-12 flex justify-center items-center`}>
+            <div className={`p-2 ${branch.Shelf ? "bg-red-600 ": branch.Books ? "bg-purple-600" : branch.Chapter ? "bg-green-600" : null } text-white mr-5 rounded-md w-12 h-12 flex justify-center items-center`}>
                 <IconComponent className="w-5 h-5" />
             </div>
             <div className="flex flex-col mt-2">

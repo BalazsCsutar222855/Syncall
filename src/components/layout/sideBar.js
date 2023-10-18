@@ -4,8 +4,9 @@ import '../../styles/layout/sideBar.css'; // Import your CSS file
 import { MenuButton } from '../common/buttons';
 import {HomeIcon, CalendarDaysIcon, ListBulletIcon, DocumentIcon} from "@heroicons/react/24/solid";
 import { HomeIcon as OutlineHomeIcon, CalendarDaysIcon as OutlineCalendarDaysIcon, ListBulletIcon as OutlineListBulletIcon, DocumentIcon as OutlineDocumentIcon } from "@heroicons/react/24/outline";
+import SearchBar from "../common/searchBar";
 
-const Sidebar = ({ toggleDarkMode, changeView }) => {
+const Sidebar = ({ toggleDarkMode, changeView, myEvents, setDate }) => {
     // Function to handle checkbox change
     const handleDarkModeToggle = (event) => {
       const isChecked = event.target.checked;
@@ -26,7 +27,8 @@ const Sidebar = ({ toggleDarkMode, changeView }) => {
                         </span>
                     </div>
                     <nav class="mt-8 px-6 text-gray-500 dark:text-gray-200">
-                        <div className='flex'>
+                        <SearchBar myEvents={myEvents} setDate={setDate}></SearchBar>
+                        <div className='flex mt-4'>
 
                             <span class=" text-xs font-bold text-gray-400">
                                     Dashboard
