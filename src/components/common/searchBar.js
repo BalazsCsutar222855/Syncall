@@ -93,7 +93,7 @@ function SearchBar({myEvents, setDate}) {
           </svg>
         </div>
         <svg
-          className="absolute left-0 z-20 hidden w-4 h-4 ml-4 text-gray-400 pointer-events-none fill-current group-hover:text-gray-500 sm:block"
+          className="absolute left-0 hidden w-4 h-4 ml-4 text-gray-400 pointer-events-none fill-current group-hover:text-gray-500 sm:block"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
         >
