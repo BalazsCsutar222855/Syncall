@@ -44,7 +44,7 @@ const CalendarElement = ({setEvents, myEvents, date, setDate}) => {
         const newEvent = updatedEvents[updatedEvents.length - 1]; // Assuming it's the last event
         setEvents((prevMyEvents) => [...prevMyEvents, ...updatedEvents]);
         // Make an API call to add the new event
-        axios.post('https://syncall.balage.top/9c59513a-fd0f-4892-9745-4d5d65ad349b/add/', newEvent, {
+        axios.post('https://syncall.balage.top/8bf2cfd1-d5af-405e-994c-616c147170a1/add/', newEvent, {
           headers: {
             Authorization: `Token ${token}`,
           }
@@ -83,7 +83,7 @@ const CalendarElement = ({setEvents, myEvents, date, setDate}) => {
             }
 
             axios
-            .put(`https://syncall.balage.top/9c59513a-fd0f-4892-9745-4d5d65ad349b/update/${editedEvent.id}/`, event, {
+            .put(`https://syncall.balage.top/8bf2cfd1-d5af-405e-994c-616c147170a1/update/${editedEvent.id}/`, event, {
               headers: {
                 Authorization: `Token ${token}`,
               }})
@@ -116,7 +116,7 @@ const CalendarElement = ({setEvents, myEvents, date, setDate}) => {
         // Check if the event with the specified id was found
         if (indexOfEventToDelete !== -1) {
           axios
-            .delete(`https://syncall.balage.top/9c59513a-fd0f-4892-9745-4d5d65ad349b/delete/${deleteEvent}/`, {
+            .delete(`https://syncall.balage.top/8bf2cfd1-d5af-405e-994c-616c147170a1/delete/${deleteEvent}/`, {
               headers: {
                 Authorization: `Token ${token}`,
               }
@@ -140,7 +140,7 @@ const CalendarElement = ({setEvents, myEvents, date, setDate}) => {
     // Get events from API
     useEffect(() => {
       // Make an HTTP GET request to your API
-      axios.get('https://syncall.balage.top/9c59513a-fd0f-4892-9745-4d5d65ad349b/', {
+      axios.get('https://syncall.balage.top/8bf2cfd1-d5af-405e-994c-616c147170a1/', {
         headers: {
           Authorization: `Token ${token}`,
         }
