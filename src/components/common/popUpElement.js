@@ -10,7 +10,8 @@ export default function Modal({
                                 popUpTitle = "Default",
                                 details = null,
                                 deleteEvent = null,
-                                setDeleteEvent = null
+                                setDeleteEvent = null,
+                                branchTree = null
                               }) {
   const modalRef = useRef(null);
 
@@ -39,7 +40,8 @@ export default function Modal({
       <>
         {showModal && (
             <>
-              <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+              <div className="fixed opacity-25 inset-0 z-40 bg-black"></div>
+              <div className="fixed opacity-25 inset-0 z-40 bg-black"></div>
               <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
                 <div
                     ref={modalRef}

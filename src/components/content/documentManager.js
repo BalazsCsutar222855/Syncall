@@ -3,17 +3,20 @@ import { Event, Favourite } from "../common/events";
 import {useEffect, useState} from "react";
 import DocumentSelector from "./documentSelector";
 import { useSpring, animated } from "react-spring";
+import PopupElement from '../common/popUpElement'
+import {AddDocument} from "./addDocument";
 import axios from 'axios';
 import { getTokenFromCookie } from '../common/setCookies'
 import {StarIcon} from "@heroicons/react/24/solid";
+import AddEvent from "./addEvent";
 
 const DocumentManager = () => {
     const token = getTokenFromCookie()
     const [isLoading, setLoading] = useState(true)
     const [view, setView] = useState('Manager')
     const [branch, setBranch] = useState({ Shelf: [], Book: [], Chapter: [], Page: [] });
-    const [branchType, setBranchType] = useState(1)
     const [branchTree, setBranchTree] = useState({})
+    const [showModal, setShowModal] = useState(false)
 
 // Fetch all the documents
     useEffect(() => {
@@ -268,10 +271,11 @@ const DocumentManager = () => {
                     <div className="relative ">
                         {view && (
                             <animated.div className="fixed top-0 right-0 p-4 w-3/5 z-999 h-screen bg-white shadow-2xl" style={modalAnimation} >
-                                <DocumentSelector branch={branch} setBranch={setBranch} setView={setView} branchType={branchType} setBranchType={setBranchType} branchTree={branchTree} setBranchTree={setBranchTree}/>
+                                <DocumentSelector branch={branch} setBranch={setBranch} setView={setView} branchTree={branchTree} setBranchTree={setBranchTree} setShowModal={setShowModal}/>
                             </animated.div>
 
                         )}
+                        <PopupElement showModal={showModal} setShowModal={setShowModal} Content={AddDocument} popUpTitle={"Add new"} details={branchTree}></PopupElement>
                     </div>
                 </>
 

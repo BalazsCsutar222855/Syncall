@@ -1,17 +1,14 @@
 import { useEffect, useState } from "react";
 import { Branches } from "../common/events";
-import PopupElement from '../common/popUpElement'
 import {TrashIcon, XMarkIcon} from "@heroicons/react/24/solid";
 import axios from 'axios'; // Import Axios if you're using it
 import { getTokenFromCookie } from '../common/setCookies'
 
 
-
-const DocumentSelector = ({branch, setBranch, setView, branchType, setBranchType, branchTree, setBranchTree}) => {
+const DocumentSelector = ({branch, setBranch, setView, branchTree, setBranchTree, setShowModal}) => {
 
     const token = getTokenFromCookie()
     const [isLoading, setLoading] = useState(false)
-    const [showModal, setShowModal] = useState(true)
 
     return(
         <div>
@@ -117,7 +114,7 @@ const DocumentSelector = ({branch, setBranch, setView, branchType, setBranchType
                             branchTree.Book ?
                                 branchTree.Chapter ?
                                     branch.Page
-                                        .filter(item => branchTree.Chapter.id ? item.Chapter_key === branchTree.Chapter.id : true)
+                                        .filter(item => branchTree.Chapter.id ? item.chapter_key === branchTree.Chapter.id : true)
                                         .map(item => (
                                         <Branches
                                             key={item.id}
@@ -195,8 +192,6 @@ const DocumentSelector = ({branch, setBranch, setView, branchType, setBranchType
                             </>
 
             </div>
-
-            <PopupElement showModal={showModal} setShowModal={setShowModal} ></PopupElement>
         </div>
     )
 }
