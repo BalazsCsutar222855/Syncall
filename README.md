@@ -10,7 +10,7 @@ Installing
     Docker: coming soon
 
 Pictures
-![image](https://github.com/BalazsCsutar222855/Syncall/assets/144050403/eaf2c042-0a7b-49b5-8139-b10cbea29537)
+![image](https://github.com/BalazsCsutar222855/Syncall/assets/144050403/d1bddccd-2a2d-4ce5-a122-c22efd222f57)
 ![image](https://github.com/BalazsCsutar222855/Syncall/assets/144050403/18061ea8-42fd-4256-a871-e18cf1199d28)
 
 ![image](https://github.com/BalazsCsutar222855/Syncall/assets/144050403/dd7cec03-8285-4a39-9efa-1df0f958658c)
