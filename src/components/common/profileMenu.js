@@ -40,7 +40,7 @@ function ProfileMenu() {
           id="options-menu"
         >
           <a href="#" className="relative block">
-            <img alt="profile" src="https://www.tailwind-kit.com/images/person/1.jpg" className="mx-auto object-cover rounded-full h-8 w-8" />
+            <img alt="profile" src="https://www.tailwind-kit.com/images/person/1.jpg" className="mx-auto object-cover rounded-full h-10 w-10" />
           </a>
         </button>
       </div>

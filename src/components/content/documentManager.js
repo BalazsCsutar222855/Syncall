@@ -17,8 +17,9 @@ const DocumentManager = () => {
     const [branch, setBranch] = useState({ Shelf: [], Book: [], Chapter: [], Page: [] });
     const [branchTree, setBranchTree] = useState({})
     const [showModal, setShowModal] = useState(false)
+    const [activities, setActivities] = useState([])
 
-// Fetch all the documents
+    // Fetch all the documents
     useEffect(() => {
         const fetchData = (url) => {
             return axios.get(url, {
@@ -40,9 +41,9 @@ const DocumentManager = () => {
         };
 
         const endpoints = [
-            { url: 'https://syncall.balage.top/editor/shelf', setter: 'Shelf' },
-            { url: 'https://syncall.balage.top/editor/book', setter: 'Book' },
-            { url: 'https://syncall.balage.top/editor/chapter', setter: 'Chapter' },
+            { url: 'https://syncall.balage.top/editor/shelves', setter: 'Shelf' },
+            { url: 'https://syncall.balage.top/editor/books', setter: 'Book' },
+            { url: 'https://syncall.balage.top/editor/chapters', setter: 'Chapter' },
             { url: 'https://syncall.balage.top/editor/pages', setter: 'Page' },
         ];
 
@@ -64,11 +65,22 @@ const DocumentManager = () => {
             });
     }, [token]);
 
+    //FEtch activities
     useEffect(() => {
-        console.log(branch);
-    }, [branch]);
-
-
+        axios.get(`https://syncall.balage.top/editor/last-activities/`, {
+            headers: {
+                Authorization: `Token ${token}`,
+            }
+        })
+            .then(response => {
+                // Set the response data directly in the state
+                setActivities(response.data)
+                console.log(response.data)
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }, []);
     //Animation for file navigator
 
     const modalAnimation = useSpring({
@@ -186,16 +198,21 @@ const DocumentManager = () => {
                         </div>
 
                         <div className="w-full">
-                            <div className="flex gap-2 h-full w-full">
+                            <div className="grid grid-cols-5 gap-2 h-full w-full">
                                 {
                                     isLoading ? (
                                         Array(5).fill().map((_, index) => (
                                             <a key={index} className="p-5 bg-gray-200 h-36 w-full rounded-md overflow-auto cursor-pointer animate-pulse"></a>
                                         ))
                                     ) : (
-                                        Array(5).fill().map((_, index) => (
-                                            <Favourite key={index}></Favourite>
-                                        ))
+                                        branch.Page
+                                            .filter((page) => page.favorite === true)
+                                            .sort((a, b) => new Date(b.updated) - new Date(a.updated)) // Sort by 'updated' in descending order
+                                            .slice(0, 5) // Get the last 5 items
+                                            .map((page, index) => (
+                                                <Favourite key={index} title={page.title} page_id={page.id}></Favourite>
+                                            ))
+
                                     )
                                 }
 
@@ -255,11 +272,11 @@ const DocumentManager = () => {
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <Event></Event>
-                                            <Event></Event>
-                                            <Event></Event>
-                                            <Event></Event>
-                                            <Event></Event>
+                                            {
+                                                activities.map((page, index) => (
+                                                    <Event key={index} page={page} />
+                                                ))
+                                            }
                                             </tbody>
                                         </table>
                                     </div>

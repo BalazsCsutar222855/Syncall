@@ -1,4 +1,5 @@
-import {TrashIcon, FaceSmileIcon, StarIcon} from "@heroicons/react/24/solid";
+import {TrashIcon, FaceSmileIcon, StarIcon, EllipsisVerticalIcon} from "@heroicons/react/24/solid";
+import {useState} from "react";
 
 export const Event = () => {
     return(
@@ -28,14 +29,14 @@ export const Event = () => {
     )
 }
 
-export const Favourite = () => {
+export const Favourite = ({title, page_id}) => {
     return (
-        <a className="p-5 bg-white h-36 w-full rounded-md overflow-auto cursor-pointer" href='/books/preview?id=1334-242545-1314fsdf3'>
+        <a className="p-5 bg-white h-36 w-full rounded-md overflow-auto cursor-pointer" href={`/books/preview?id=${page_id}`}>
             <div className="p-2 bg-yellow-300 mr-5 rounded-md w-12 h-12 flex justify-center items-center">
                 <StarIcon className="w-6 h-6 text-white"></StarIcon>
             </div>
             <div className="flex flex-col mt-2">
-                <p className="font-bold ">Shelfs</p>
+                <p className="font-bold ">{title}</p>
                 <p className="text-xs text-gray-500 break-all overflow-hidden">
                     4 shelfes 4 shelfes 4 shelfes 4 shelfes 4 shelfes 4 shelfes
                 </p>
@@ -45,10 +46,17 @@ export const Favourite = () => {
     )
 }
 
-export const Branches = ({ icon: IconComponent, title, desc, branch, setBranch, id, setLoading, branchTree, setBranchTree}) => {
+export const Branches = ({ icon: IconComponent, title, desc, branch, setBranch, id, setLoading, branchTree, setBranchTree, isChecked, handleRadioChange, checkedId}) => {
+
     return (
-        <a className="p-5 bg-gray-100 h-36 w-full rounded-md overflow-auto cursor-pointer" href={branchTree.Chapter ? `/books/preview?id=${id}` : undefined}
-            onClick={() => {
+        <a className={`p-5 bg-gray-100 h-36 w-full rounded-md overflow-auto cursor-pointer ${checkedId === id ? "shadow-md" : ""} duration-200`} href={branchTree.Chapter ? `/books/preview?id=${id}` : undefined}>
+            <div className={`text-white rounded-md w-full h-12 flex justify-between`}>
+               <div className={`p-2 ${branch.Shelf ? "bg-red-600 ": branch.Books ? "bg-purple-600" : branch.Chapter ? "bg-green-600" : null } text-white mr-5 rounded-md w-12 h-12 flex items-center justify-center`}>
+                   <IconComponent className="w-5 h-5" />
+               </div>
+                <input type="radio" name="radioButton" checked={isChecked} onChange={() => handleRadioChange(id)} className="w-4 h-4" />
+            </div>
+            <div className="flex flex-col mt-2" onClick={() => {
 
                 if (!branchTree.Shelf) {
                     branchTree.Shelf = {title, id};
@@ -64,12 +72,7 @@ export const Branches = ({ icon: IconComponent, title, desc, branch, setBranch, 
                 setBranchTree({ ...branchTree });
 
 
-            }}
-        >
-            <div className={`p-2 ${branch.Shelf ? "bg-red-600 ": branch.Books ? "bg-purple-600" : branch.Chapter ? "bg-green-600" : null } text-white mr-5 rounded-md w-12 h-12 flex justify-center items-center`}>
-                <IconComponent className="w-5 h-5" />
-            </div>
-            <div className="flex flex-col mt-2">
+            }}>
                 <p className="font-bold ">{title}</p>
                 <p className="text-xs text-gray-500 break-all overflow-hidden">
                     {desc}

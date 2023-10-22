@@ -9,12 +9,19 @@ const DocumentSelector = ({branch, setBranch, setView, branchTree, setBranchTree
 
     const token = getTokenFromCookie()
     const [isLoading, setLoading] = useState(false)
+    const [isChecked, setChecked] = useState()
+    const [checkedId, setCheckedId] = useState(null)
+
+    const handleRadioChange = (id) => {
+        setCheckedId(id); // Set the checkedId to the id of the checked radio button
+        console.log(id)
+    };
 
     return(
         <div>
             <div className="w-full h-full flex items-center mb-5 gap-6 text-gray-300 cursor-pointer">
                 <XMarkIcon className="h-5 w-5 text-gray-600" onClick={() => {
-                    setView('Manager'); setBranchTree({})
+                    setView('Manager'); setBranchTree({}); setCheckedId({}); setChecked()
                 }}></XMarkIcon>
 
                 <div className="flex gap-2 text-gray-400 items-center" onClick={() => {setLoading(true); setBranchTree({})} }>
@@ -26,6 +33,7 @@ const DocumentSelector = ({branch, setBranch, setView, branchTree, setBranchTree
                     <p>All</p>
                 </div>
 
+                <>
                 {
                     branchTree.Shelf && branchTree.Shelf.id ?
 
@@ -97,6 +105,8 @@ const DocumentSelector = ({branch, setBranch, setView, branchTree, setBranchTree
                     null
 
                 }
+                </>
+
 
             </div>
 
@@ -129,6 +139,9 @@ const DocumentSelector = ({branch, setBranch, setView, branchTree, setBranchTree
                                             setLoading={setLoading}
                                             branchTree={branchTree}
                                             setBranchTree={setBranchTree}
+                                            isChecked={isChecked}
+                                            handleRadioChange={() => handleRadioChange(item.id)}
+                                            checkedId={checkedId}
                                         />
                                     ))
                                     :
@@ -148,25 +161,31 @@ const DocumentSelector = ({branch, setBranch, setView, branchTree, setBranchTree
                                             setLoading={setLoading}
                                             branchTree={branchTree}
                                             setBranchTree={setBranchTree}
+                                            isChecked={isChecked}
+                                            handleRadioChange={() => handleRadioChange(item.id)}
+                                            checkedId={checkedId}
                                         />
                                     ))
                                 :
                                 branch.Book
                                     .filter(item => branchTree.Shelf.id ? item.shelf_key === branchTree.Shelf.id : true)
-                                    .map(({ id, title, description, start, end }) => (
+                                    .map(item => (
                                         <Branches
-                                            key={id}
+                                            key={item.id}
                                             branch={branch}
                                             setBranch={setBranch}
                                             icon={TrashIcon}
-                                            title={title}
-                                            desc={description}
-                                            id={id}
-                                            start={start}
-                                            end={end}
+                                            title={item.title}
+                                            desc={item.description}
+                                            id={item.id}
+                                            start={item.start}
+                                            end={item.end}
                                             setLoading={setLoading}
                                             branchTree={branchTree}
                                             setBranchTree={setBranchTree}
+                                            isChecked={isChecked}
+                                            handleRadioChange={() => handleRadioChange(item.id)}
+                                            checkedId={checkedId}
                                         />
                                     ))
                             :
@@ -184,6 +203,9 @@ const DocumentSelector = ({branch, setBranch, setView, branchTree, setBranchTree
                                     setLoading={setLoading}
                                     branchTree={branchTree}
                                     setBranchTree={setBranchTree}
+                                    isChecked={isChecked}
+                                    handleRadioChange={() => handleRadioChange(item.id)}
+                                    checkedId={checkedId}
                                 />
                             ))}
 

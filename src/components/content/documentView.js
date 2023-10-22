@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import MDEditor from '@uiw/react-md-editor';
 import { getCodeString } from 'rehype-rewrite';
 import katex from 'katex';
 import "katex/dist/katex.css";
-import {FolderArrowDownIcon, XMarkIcon, ArrowPathIcon} from "@heroicons/react/24/solid";
-import {UsersIcon} from "@heroicons/react/24/outline";
+import {FolderArrowDownIcon, XMarkIcon, ArrowPathIcon, StarIcon} from "@heroicons/react/24/solid";
+import {UsersIcon, StarIcon as OutlineStarIcon} from "@heroicons/react/24/outline";
 import axios from "axios";
 import { getTokenFromCookie } from '../common/setCookies'
 import {Conformation} from '../common/popUpElement'
@@ -16,13 +16,58 @@ const DocumentView = () => {
     const [description, setDescription] = useState();
     const [confirm, setConfirm] = useState(false)
     const [confirmed, setConfirmed] = useState(false)
+    const [isTyping, setTyping] = useState(false)
     const [title, setTitle] = useState()
+    const [favourite, setFavourite] = useState(true)
     const token = getTokenFromCookie()
     const id = new URL(window.location.href).searchParams.get("id");
+    const [socket, setSocket] = useState(null);
+
+    useEffect(() => {
+        const createWebSocket = () => {
+            const newSocket = new WebSocket(`ws://192.168.1.95:8090/ws/${id}/`);
+            newSocket.onopen = () => {
+                console.log('WebSocket connection opened');
+            };
+
+            newSocket.onmessage = (event) => {
+                const message = JSON.parse(event.data);
+                setDescription(message.text);
+            };
+
+            newSocket.onclose = (event) => {
+                console.log('WebSocket connection closed');
+                // Handle reconnection logic here, you can use a timer to retry connecting
+                setTimeout(() => createWebSocket(), 3000); // Retry connection after 3 seconds
+            };
+
+            setSocket(newSocket);
+        };
+
+        createWebSocket(); // Initial WebSocket connection
+
+        return () => {
+            if (socket) {
+                socket.close();
+            }
+        };
+    }, [id]);
+
+    useEffect(() => {
+        if (isTyping) {
+            const messageObj = { type: 'websocket.receive', text: description };
+            if (socket) {
+                socket.send(JSON.stringify(messageObj));
+                setTyping(false);
+            }
+        }
+    }, [isTyping, description, socket]);
 
     const handleNoteChange = (val) => {
         setDescription(val);
-    }
+        setTyping(true);
+    };
+
     const handleTitleChange = (val) => {
         setTitle(val);
     }
@@ -31,6 +76,7 @@ const DocumentView = () => {
         setConfirm(true)
     }
 
+    //DELETE
     useEffect(() => {
 
         if(confirmed === true)
@@ -55,8 +101,9 @@ const DocumentView = () => {
 
     }, [confirmed])
 
+    //GET
     useEffect(() => {
-        axios.get(`https://syncall.balage.top/editor/page/${id}`, {
+        axios.get(`https://syncall.balage.top/editor/page/${id}/`, {
             headers: {
                 Authorization: `Token ${token}`,
             }
@@ -64,6 +111,7 @@ const DocumentView = () => {
             .then(response => {
                 // Set the response data directly in the state
                 setDescription(response.data.description);
+                setFavourite(response.data.favorite)
                 setTitle(response.data.title)
                 console.log(response.data);
             })
@@ -72,6 +120,24 @@ const DocumentView = () => {
             });
     }, []);
 
+    //SET FAVOURITE
+    const handleFavourite = async () => {
+            await setFavourite(!favourite)
+            axios
+                .put(`https://syncall.balage.top/editor/page/update/${id}/`, { "favorite":!favourite}, {
+                    headers: {
+                        Authorization: `Token ${token}`,
+                    }})
+                .then((response) => {
+                    // Handle the API response if needed
+                    console.log(response)
+                })
+                .catch((error) => {
+                    console.log('Error updating event:', error);
+                });
+    }
+
+    //SAVE
     const handleSave = () => {
         if(title !== '' && description !== '')
         {
@@ -203,39 +269,48 @@ const DocumentView = () => {
 
 
                                         <span className="mx-4 text-sm font-bold">
-                        Edit
-                    </span>
-                                    </a>
+                                            Edit
+                                        </span>
+                                                        </a>
                             }
-                            <a className="hover:text-indigo-700 hover:bg-gray-100 flex items-center p-2 my-3 transition-colors dark:hover:text-white dark:hover:bg-gray-600 duration-200  text-gray-500 dark:text-gray-200 rounded-lg  " href="#"
-                            >
+                            <a className="hover:text-indigo-700 hover:bg-gray-100 flex items-center p-2 my-3 transition-colors dark:hover:text-white dark:hover:bg-gray-600 duration-200  text-gray-500 dark:text-gray-200 rounded-lg  " href="#">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" className="w-5 h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 13.5H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
                                 </svg>
 
 
                                 <span className="mx-4 text-sm font-bold">
-                        Move
-                    </span>
-                                <span className="flex-grow text-right">
-                    </span>
+                                    Move
+                                </span>
                             </a>
-                            <a className="hover:text-indigo-700 hover:bg-gray-100 flex items-center p-2 my-3 transition-colors dark:hover:text-white dark:hover:bg-gray-600 duration-200  text-gray-500 dark:text-gray-200 rounded-lg  " href="#"
-                            >
-                                <UsersIcon className="h-5 w-5 stroke-2"></UsersIcon>
 
+                            <button  onClick={() => {handleFavourite()}} className="hover:text-indigo-700 hover:bg-gray-100 flex items-center p-2 my-3 transition-colors dark:hover:text-white dark:hover:bg-gray-600 duration-200  text-gray-500 dark:text-gray-200 rounded-lg  " href="#">
+
+                                {favourite ?
+                                    <StarIcon className="h-5 w-5 stroke-2 text-yellow-200 stroke-yellow-400"></StarIcon>
+                                    :
+                                    <OutlineStarIcon className="h-5 w-5 stroke-2"></OutlineStarIcon>
+                                }
                                 <span className="mx-4 text-sm font-bold">
-                                    Share
+                                    Favourite
                                 </span>
+                            </button>
+                            <div>
+                                <a className="hover:text-indigo-700 hover:bg-gray-100 flex items-center p-2 my-3 transition-colors dark:hover:text-white dark:hover:bg-gray-600 duration-200  text-gray-500 dark:text-gray-200 rounded-lg  " href="#">
+                                    <UsersIcon className="h-5 w-5 stroke-2"></UsersIcon>
 
-                                <span className="text-right rounded-md bg-red-200 ml-auto px-2 py-1 text-xs">
-                                    0
-                                </span>
+                                    <span className="mx-4 text-sm font-bold">
+                                        Share
+                                    </span>
+                                    <span className="text-right rounded-md bg-red-200 ml-auto px-2 py-1 text-xs">
+                                        0
+                                    </span>
+                                </a>
 
 
-                            </a>
-                            <div onClick={() => handleDelete()} className="cursor-pointer hover:text-indigo-700 hover:bg-gray-100 flex items-center p-2 my-3 transition-colors dark:hover:text-white dark:hover:bg-gray-600 duration-200  text-gray-500 dark:text-gray-200 rounded-lg  " href="#"
-                            >
+
+                            </div>
+                            <div onClick={() => handleDelete()} className="cursor-pointer hover:text-indigo-700 hover:bg-gray-100 flex items-center p-2 my-3 transition-colors dark:hover:text-white dark:hover:bg-gray-600 duration-200  text-gray-500 dark:text-gray-200 rounded-lg  " href="#">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" className="w-5 h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                                 </svg>

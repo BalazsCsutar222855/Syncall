@@ -8,6 +8,11 @@
     max-width: 100%;
 }
 
+.Calendar
+{
+    background: white;
+}
+
 .rbc-toolbar
 {
     @apply p-4 m-0 border-b-2 border-gray-100 dark:bg-gray-700;

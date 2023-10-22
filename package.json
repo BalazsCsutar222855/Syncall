@@ -23,7 +23,8 @@
     "react-transition-group": "^4.4.5",
     "rehype-rewrite": "^4.0.0",
     "socket.io-client": "^4.7.2",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "websocket": "^1.0.34"
   },
   "scripts": {
     "start": "react-scripts start",
