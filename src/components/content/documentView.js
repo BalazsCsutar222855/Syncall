@@ -8,6 +8,7 @@ import {UsersIcon, StarIcon as OutlineStarIcon} from "@heroicons/react/24/outlin
 import axios from "axios";
 import { getTokenFromCookie } from '../common/setCookies'
 import {Conformation} from '../common/popUpElement'
+import {MermaidComp} from "./mermaidComp";
 
 const DocumentView = () => {
 
@@ -23,6 +24,7 @@ const DocumentView = () => {
     const id = new URL(window.location.href).searchParams.get("id");
     const [socket, setSocket] = useState(null);
 
+    /*
     useEffect(() => {
         const createWebSocket = () => {
             const newSocket = new WebSocket(`ws://192.168.1.95:8090/ws/${id}/`);
@@ -63,9 +65,17 @@ const DocumentView = () => {
         }
     }, [isTyping, description, socket]);
 
+    */
+
+
+
     const handleNoteChange = (val) => {
         setDescription(val);
+
+        /*
         setTyping(true);
+
+         */
     };
 
     const handleTitleChange = (val) => {
@@ -179,7 +189,7 @@ const DocumentView = () => {
                             highlightEnable={true}
                             visibleDragbar={false}
                             value={description}
-                            style={{border: '0px'}}
+                            style={{border: '0px', whiteSpace: "pre-wrap"}}
                             onChange={(val) => handleNoteChange(val)}
                             previewOptions={{
                                 components: {

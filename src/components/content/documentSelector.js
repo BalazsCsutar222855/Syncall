@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Branches } from "../common/events";
-import {TrashIcon, XMarkIcon} from "@heroicons/react/24/solid";
+import {TrashIcon, XMarkIcon, TableCellsIcon, BookOpenIcon, DocumentDuplicateIcon, DocumentTextIcon} from "@heroicons/react/24/solid";
 import axios from 'axios'; // Import Axios if you're using it
 import { getTokenFromCookie } from '../common/setCookies'
 
@@ -11,15 +11,17 @@ const DocumentSelector = ({branch, setBranch, setView, branchTree, setBranchTree
     const [isLoading, setLoading] = useState(false)
     const [isChecked, setChecked] = useState()
     const [checkedId, setCheckedId] = useState(null)
+    const [activePage, setActivePage] = useState(1)
 
     const handleRadioChange = (id) => {
         setCheckedId(id); // Set the checkedId to the id of the checked radio button
         console.log(id)
     };
 
+
     return(
-        <div>
-            <div className="w-full h-full flex items-center mb-5 gap-6 text-gray-300 cursor-pointer">
+        <div className="flex flex-col h-full">
+            <div className="w-full h-8 flex items-center gap-6 text-gray-300 cursor-pointer">
                 <XMarkIcon className="h-5 w-5 text-gray-600" onClick={() => {
                     setView('Manager'); setBranchTree({}); setCheckedId({}); setChecked()
                 }}></XMarkIcon>
@@ -110,7 +112,7 @@ const DocumentSelector = ({branch, setBranch, setView, branchTree, setBranchTree
 
             </div>
 
-            <div class="grid grid-cols-4 gap-4">
+            <div className="grid flex-grow items-start grid-cols-6 py-3 grid-rows-3 gap-4">
 
                     <>
                         <button role="status" class="flex flex-col gap-2 items-center justify-center h-36 max-w-sm bg-gray-200 text-gray-300 rounded-lg dark:bg-gray-700" onClick={() => setShowModal(true)}>
@@ -125,12 +127,13 @@ const DocumentSelector = ({branch, setBranch, setView, branchTree, setBranchTree
                                 branchTree.Chapter ?
                                     branch.Page
                                         .filter(item => branchTree.Chapter.id ? item.chapter_key === branchTree.Chapter.id : true)
+                                        .slice((activePage - 1 )* 12, activePage * 12 + 11)
                                         .map(item => (
                                         <Branches
                                             key={item.id}
                                             branch={branch}
                                             setBranch={setBranch}
-                                            icon={TrashIcon}
+                                            icon={DocumentTextIcon}
                                             title={item.title}
                                             desc={item.description}
                                             id={item.id}
@@ -147,12 +150,13 @@ const DocumentSelector = ({branch, setBranch, setView, branchTree, setBranchTree
                                     :
                                     branch.Chapter
                                         .filter(item => branchTree.Book.id ? item.book_key === branchTree.Book.id : true)
+                                        .slice((activePage - 1 )* 12, activePage * 12 + 11)
                                         .map(item => (
                                         <Branches
                                             key={item.id}
                                             branch={branch}
                                             setBranch={setBranch}
-                                            icon={TrashIcon}
+                                            icon={DocumentDuplicateIcon}
                                             title={item.title}
                                             desc={item.description}
                                             id={item.id}
@@ -169,12 +173,13 @@ const DocumentSelector = ({branch, setBranch, setView, branchTree, setBranchTree
                                 :
                                 branch.Book
                                     .filter(item => branchTree.Shelf.id ? item.shelf_key === branchTree.Shelf.id : true)
+                                    .slice((activePage - 1 )* 12, activePage * 12 + 11)
                                     .map(item => (
                                         <Branches
                                             key={item.id}
                                             branch={branch}
                                             setBranch={setBranch}
-                                            icon={TrashIcon}
+                                            icon={BookOpenIcon}
                                             title={item.title}
                                             desc={item.description}
                                             id={item.id}
@@ -189,12 +194,14 @@ const DocumentSelector = ({branch, setBranch, setView, branchTree, setBranchTree
                                         />
                                     ))
                             :
-                            branch.Shelf.map(item => (
+                            branch.Shelf
+                                .slice((activePage - 1) * 18, (activePage - 1) * 18 + 17)
+                                .map(item => (
                                 <Branches
                                     key={item.id}
                                     branch={branch}
                                     setBranch={setBranch}
-                                    icon={TrashIcon}
+                                    icon={TableCellsIcon}
                                     title={item.title}
                                     desc={item.description}
                                     id={item.id}
@@ -214,6 +221,47 @@ const DocumentSelector = ({branch, setBranch, setView, branchTree, setBranchTree
                             </>
 
             </div>
+
+            <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+                <div className="flex flex-1 justify-between sm:hidden">
+                    <a href="#" className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Previous</a>
+                    <a href="#" className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 tzext-sm font-medium text-gray-700 hover:bg-gray-50">Next</a>
+                </div>
+                <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between gap-2">
+                    <div>
+                        <p className="text-sm text-gray-700 flex gap-1">
+                            Showing
+                            <span className="font-medium">{(activePage - 1) * 17}</span>
+                            to
+                            <span className="font-medium">{(activePage ) * 17}</span>
+                            of
+                            <span className="font-semibold">{branchTree.Shelf ? branchTree.Book ? branchTree.Chapter ? branch.Page.length : branch.Chapter.length : branch.Book.length : branch.Shelf.length}</span>
+                            results
+                        </p>
+                    </div>
+                    <div>
+                        <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                            <a href="#" className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                                <span className="sr-only">Previous</span>
+                                <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+
+                            <a href="#" aria-current="page" className="relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">1</a>
+                            <a href="#" className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">2</a>
+                            <a href="#" class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                                <span class="sr-only">Next</span>
+                                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     )
 }

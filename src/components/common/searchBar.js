@@ -1,11 +1,48 @@
 import React, { useState, useRef, useEffect } from 'react';
+import axios from "axios";
+import { getTokenFromCookie } from '../common/setCookies'
 
-function SearchBar({myEvents, setDate}) {
+
+function SearchBar({setDate}) {
   const [isFocused, setIsFocused] = useState(false);
   const dropdownRef = useRef(null);
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredEvents, setFilteredEvents] = useState(myEvents);
+  const [filteredEvents, setFilteredEvents] = useState();
+  const [myEvents, setEvents] = useState();
+
+  const token = getTokenFromCookie()
+
+  // Get events from API
+  useEffect(() => {
+    // Make an HTTP GET request to your API
+    axios.get('https://syncall.balage.top/9d1cd87b-5caa-4314-a99e-5ff76a059751/', {
+      headers: {
+        Authorization: `Token ${token}`,
+      }
+    })
+        .then(response => {
+          // Assuming the response.data is an array of events
+          const formattedEvents = response.data.map(event => ({
+            id: event.id,
+            title: event.title,
+            description: event.description,
+            start: event.start,
+            end: event.end,
+            color: event.color,
+            calendar_key: event.calendar_key,
+          }));
+
+          // Set the formatted events in the state
+          setEvents(formattedEvents);
+          console.log(formattedEvents)
+        })
+        .catch(error => {
+          console.error('Error fetching events:', error);
+        });
+  }, []);
+
+
 
   const handleInputChange = (event) => {
     const query = event.target.value;

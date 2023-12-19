@@ -38,7 +38,7 @@ export const Favourite = ({title, page_id}) => {
             <div className="flex flex-col mt-2">
                 <p className="font-bold ">{title}</p>
                 <p className="text-xs text-gray-500 break-all overflow-hidden">
-                    4 shelfes 4 shelfes 4 shelfes 4 shelfes 4 shelfes 4 shelfes
+                    Python exam definitions etc
                 </p>
             </div>
         </a>
@@ -51,10 +51,10 @@ export const Branches = ({ icon: IconComponent, title, desc, branch, setBranch, 
     return (
         <a className={`p-5 bg-gray-100 h-36 w-full rounded-md overflow-auto cursor-pointer ${checkedId === id ? "shadow-md" : ""} duration-200`} href={branchTree.Chapter ? `/books/preview?id=${id}` : undefined}>
             <div className={`text-white rounded-md w-full h-12 flex justify-between`}>
-               <div className={`p-2 ${branch.Shelf ? "bg-red-600 ": branch.Books ? "bg-purple-600" : branch.Chapter ? "bg-green-600" : null } text-white mr-5 rounded-md w-12 h-12 flex items-center justify-center`}>
-                   <IconComponent className="w-5 h-5" />
+               <div className={`p-2 ${branchTree.Shelf ? branchTree.Book ? branchTree.Chapter ? "bg-blue-600" : "bg-green-600" : "bg-purple-600" : "bg-red-600" } text-white mr-5 rounded-md w-12 h-12 flex items-center justify-center`}>
+                   <IconComponent className="w-6 h-6" />
                </div>
-                <input type="radio" name="radioButton" checked={isChecked} onChange={() => handleRadioChange(id)} className="w-4 h-4" />
+                <EllipsisVerticalIcon onClick={() => handleRadioChange(id)} className="w-6 h-6 text-gray-500 " />
             </div>
             <div className="flex flex-col mt-2" onClick={() => {
 

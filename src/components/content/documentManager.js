@@ -19,6 +19,10 @@ const DocumentManager = () => {
     const [showModal, setShowModal] = useState(false)
     const [activities, setActivities] = useState([])
 
+    useEffect(() => {
+        console.log(branch)
+    }, [branch]);
+
     // Fetch all the documents
     useEffect(() => {
         const fetchData = (url) => {
@@ -119,7 +123,7 @@ const DocumentManager = () => {
                                                 <p className="text-xs text-gray-300 text-left">{branch.Shelf.length} shelves</p>
                                             </div>
                                             <div className="ml-auto text-gray-300">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-5 h-5">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
                                                 </svg>
                                             </div>
@@ -135,7 +139,7 @@ const DocumentManager = () => {
                                                 <p className="text-xs text-gray-300">{branch.Book.length}  books</p>
                                             </div>
                                             <div className="ml-auto text-gray-300">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-5 h-5">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
                                                 </svg>
                                             </div>
@@ -153,7 +157,7 @@ const DocumentManager = () => {
                                                 <p className="text-xs text-gray-300">{branch.Chapter.length} chapters</p>
                                             </div>
                                             <div className="ml-auto text-gray-300">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-5 h-5">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
                                                 </svg>
                                             </div>
@@ -170,7 +174,7 @@ const DocumentManager = () => {
                                                 <p className="text-xs text-gray-300">{branch.Page.length} pages</p>
                                             </div>
                                             <div className="ml-auto text-gray-300">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-5 h-5">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
                                                 </svg>
                                             </div>
@@ -287,12 +291,16 @@ const DocumentManager = () => {
 
                     <div className="relative ">
                         {view && (
-                            <animated.div className="fixed top-0 right-0 p-4 w-3/5 z-999 h-screen bg-white shadow-2xl" style={modalAnimation} >
+                            <animated.div className="fixed top-0 right-0 p-4 w-full z-999 h-screen bg-white shadow-2xl" style={modalAnimation} >
                                 <DocumentSelector branch={branch} setBranch={setBranch} setView={setView} branchTree={branchTree} setBranchTree={setBranchTree} setShowModal={setShowModal}/>
                             </animated.div>
 
                         )}
-                        <PopupElement showModal={showModal} setShowModal={setShowModal} Content={AddDocument} popUpTitle={"Add new"} details={branchTree}></PopupElement>
+                        <PopupElement showModal={showModal} setShowModal={setShowModal} Content={AddDocument}  popUpTitle={"Add new"} details={{
+                            branchTree,
+                            setBranch,
+                            branch
+                        }}></PopupElement>
                     </div>
                 </>
 

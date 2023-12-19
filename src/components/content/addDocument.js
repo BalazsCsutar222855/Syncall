@@ -8,27 +8,27 @@ export const AddDocument = ({details}) => {
     const token = getTokenFromCookie()
     const [title, setTitle] = useState()
     const [description, setDescription] = useState()
+    const [isLoading, setLoading] = useState()
 
-    const UploadDocument = (url) => {
+    const UploadDocument = () => {
 
         let documentType = "shelf";
 
-        if (details.Chapter) {
+        if (details.branchTree.Chapter) {
             documentType = "page";
-        } else if (details.Book) {
+        } else if (details.branchTree.Book) {
             documentType = "chapter";
-        } else if (details.Shelf) {
+        } else if (details.branchTree.Shelf) {
             documentType = "book";
         }
 
         const dataObject = {
             title: title,
             description: description,
-            shelf_key: details.Shelf ? details.Shelf.id : null,
-            book_key: details.Book ? details.Book.id : null,
-            chapter_key: details.Chapter ? details.Chapter.id : null,
+            shelf_key: details.branchTree.Shelf ? details.branchTree.Shelf.id : null,
+            book_key: details.branchTree.Book ? details.branchTree.Book.id : null,
+            chapter_key: details.branchTree.Chapter ? details.branchTree.Chapter.id : null,
         };
-
         axios.post(`https://syncall.balage.top/editor/${documentType}/add/`, dataObject, {
             headers: {
                 Authorization: `Token ${token}`,
@@ -37,17 +37,31 @@ export const AddDocument = ({details}) => {
     .then(response => {
                 // Handle the API response if needed
                 console.log('Event added successfully:', response.data);
-            })
+
+                details.setBranch((prevBranch) => {
+            const updatedBranch = { ...prevBranch };
+
+            // Capitalize the first letter of documentType
+            const typeKey = documentType.charAt(0).toUpperCase() + documentType.slice(1);
+
+            // Use concat to add the dataObject to the appropriate array
+            updatedBranch[typeKey] = updatedBranch[typeKey].concat(dataObject);
+
+            return updatedBranch;
+        });
+                setLoading(false)
+    })
             .catch(error => {
                 console.log('Error adding event:', error);
             });
     }
 
     const addNewDocument = () => {
-        if (details) {
-            UploadDocument("shelf");
+        if (details.branchTree) {
+            setLoading(true)
+            UploadDocument();
         }
-        // You might want to include an else block to handle the case when details.Shelf doesn't exist.
+        // You might want to include an else block to handle the case when details.branchTree.Shelf doesn't exist.
     }
 
     return (
@@ -63,7 +77,7 @@ export const AddDocument = ({details}) => {
                 </div>
 
                 {
-                    details.Shelf && details.Shelf.id ?
+                    details.branchTree.Shelf && details.branchTree.Shelf.id ?
 
                         <>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" className="w-5 h-5">
@@ -75,7 +89,7 @@ export const AddDocument = ({details}) => {
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-7.5A1.125 1.125 0 0112 18.375m9.75-12.75c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125m19.5 0v1.5c0 .621-.504 1.125-1.125 1.125M2.25 5.625v1.5c0 .621.504 1.125 1.125 1.125m0 0h17.25m-17.25 0h7.5c.621 0 1.125.504 1.125 1.125M3.375 8.25c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m17.25-3.75h-7.5c-.621 0-1.125.504-1.125 1.125m8.625-1.125c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M12 10.875v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125M13.125 12h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125M20.625 12c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5M12 14.625v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 14.625c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m0 1.5v-1.5m0 0c0-.621.504-1.125 1.125-1.125m0 0h7.5" />
                                 </svg>
 
-                                <p>{details.Shelf.title}</p>
+                                <p>{details.branchTree.Shelf.title}</p>
                             </div>
                         </>
 
@@ -86,7 +100,7 @@ export const AddDocument = ({details}) => {
                 }
 
                 {
-                    details.Book  && details.Book.id ?
+                    details.branchTree.Book  && details.branchTree.Book.id ?
 
                         <>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" className="w-5 h-5">
@@ -98,7 +112,7 @@ export const AddDocument = ({details}) => {
                                     <path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.25a.75.75 0 001 .707A8.237 8.237 0 016 18.75c1.995 0 3.823.707 5.25 1.886V4.533zM12.75 20.636A8.214 8.214 0 0118 18.75c.966 0 1.89.166 2.75.47a.75.75 0 001-.708V4.262a.75.75 0 00-.5-.707A9.735 9.735 0 0018 3a9.707 9.707 0 00-5.25 1.533v16.103z" />
                                 </svg>
 
-                                <p>{details.Book.title}</p>
+                                <p>{details.branchTree.Book.title}</p>
                             </div>
                         </>
 
@@ -109,7 +123,7 @@ export const AddDocument = ({details}) => {
                 }
 
                 {
-                    details.Chapter && details.Chapter.id ?
+                    details.branchTree.Chapter && details.branchTree.Chapter.id ?
 
                         <>
 
@@ -124,7 +138,7 @@ export const AddDocument = ({details}) => {
                                 </svg>
 
 
-                                <p>{details.Chapter.title}</p>
+                                <p>{details.branchTree.Chapter.title}</p>
                             </div>
                         </>
 
